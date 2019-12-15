@@ -1,0 +1,339 @@
+{% extends 'base.twig' %}
+
+{% block title %}صورتحساب{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+	$(document).ready(function(){  
+            $(".circle").click(function (e){
+                stepClicked(e);
+            });
+            
+            var products= getProducts();
+            var total=0;
+            for(var i=0;i<products.length;i++){
+                 total+=addProductRow(products[i],i);
+            }
+            total+=addDaftariRow(products.length);
+            addCarrierRow();
+            addSumRow(total);
+            getCarrierPrice();
+            loadCenterDetails();
+            loadCustomerDetails();
+            loadOrderData();
+	});
+        
+        function loadOrderData(){
+            var data={
+                center:parseInt(getCenter().item.id),
+                centerLoc:getCenter().item.loc,
+                addressLoc:getAddress().item.point,
+                address:getAddress().item.id,
+                products:getProducts()
+            };
+            $("#txtData").val(JSON.stringify(data));
+        }
+        
+        function loadCenterDetails(){
+            var center=getCenter().item;
+            $("#centerTitle").html("دفتر ترجمه رسمی "+center.code+" "+center.city);
+            $("#address").html(center.address);
+            $("#phone").html(center.phone);
+            $("#manager").html(center.manager);
+        }
+        function loadCustomerDetails(){
+            var customer=getAddress().item;
+            $("#customer").html(customer.name);
+            $("#customerAddress").html(customer.address);
+            $("#customerMobile").html(customer.mobile);
+        }
+        function getCarrierPrice(){
+            var center=getCenter();
+            var loc=getCenter().item.loc;
+            var userPoint=getAddress().item.point;
+            var dist=getDistance(loc,userPoint);
+            if(isFreeCarrier(center,dist)){
+                $("#carrierPrice").html("رایگان");
+            }
+            fetch("carrier_price?p1="+userPoint+"&p2="+loc,{
+                 method:"get"
+             })
+             .then(res=>res.json())
+             .then(
+                 (result) => {
+                     if(result===-1){
+                         $("#carrierPrice").html("پرداخت حضوری");
+                     }
+                     else{
+                        $("#carrierPrice").html(+result);
+                        var prevSum=parseInt($("#sum").html());
+                        $("#sum").html(prevSum+result)
+                     }
+                     
+                 },
+                 (error) => {
+                     $("#carrierPrice").html("پرداخت حضوری");
+                 }
+             );            
+            
+        }
+        function addProductRow(product,index){
+            var row=$("<div></div>");
+            row.addClass("billRow");
+            if(index%2===0){
+                row.addClass("billRowEven");
+            }
+            else{
+                row.addClass("billRowOdd");
+            }
+            row.addClass("row");
+            row.append($("<div class='col-2'>"+product.product.title+"</div>"));
+            row.append($("<div class='col-2'>"+correctPage(product.pages)+"</div>"));
+            row.append($("<div class='col-2'>"+correctPage(product.clone)+"</div>"));
+            var extras=$("<div class='col-2'></div>");
+            addExtraRows(extras,product);
+            row.append(extras);
+            row.append($("<div class='col-2'>"+correctPage(product.product.price)+"</div>"));
+            var total=getRowPrice(product);
+            row.append($("<div class='col-2'>"+total+"</div>"));
+            $("#billRows").append(row);
+            return total;
+        }
+        function addSumRow(total){
+            var row=$("<div></div>");
+            row.addClass("billRow");
+            row.css("background-color","rgb(226, 237, 255)");
+            row.css("border-bottom","solid 1px #9999ff");
+            
+            
+            row.addClass("row");
+            row.append($("<div class='col-2'>جمع</div>"));
+            row.append($("<div class='col-2'>-</div>"));
+            row.append($("<div class='col-2'>-</div>"));
+            row.append($("<div class='col-2'>-</div>"));
+            row.append($("<div class='col-2'>-</div>"));
+            row.append($("<div id='sum' class='col-2'>"+total+"</div>"));
+            $("#billRows").append(row);
+        }
+        function addCarrierRow(total){
+            var row=$("<div></div>");
+            var count=$(".billRow").length;
+            row.addClass("billRow");
+            if(count%2===0){
+                row.addClass("billRowEven");
+            }
+            else{
+                row.addClass("billRowOdd");
+            }
+            
+            row.addClass("row");
+            row.append($("<div class='col-2'>هزینه پیک</div>"));
+            row.append($("<div class='col-2'>-</div>"));
+            row.append($("<div class='col-2'>-</div>"));
+            row.append($("<div class='col-2'>-</div>"));
+            row.append($("<div class='col-2'>-</div>"));
+            row.append($("<div id='carrierPrice' class='col-2'></div>"));
+            $("#billRows").append(row);
+        }
+        function addDaftariRow(index){
+            var prices=JSON.parse($("#txtPrice").val());
+            var row=$("<div></div>");
+            row.addClass("billRow");
+            if(index%2===0){
+                row.addClass("billRowEven");
+            }
+            else{
+                row.addClass("billRowOdd");
+            }
+            row.addClass("row");
+            row.append($("<div class='col-2'>هزینه های دفتری</div>"));
+            row.append($("<div class='col-2'>-</div>"));
+            row.append($("<div class='col-2'>-</div>"));
+            row.append($("<div class='col-2'>-</div>"));
+            row.append($("<div class='col-2'>-</div>"));
+            row.append($("<div class='col-2'>"+prices.daftari+"</div>"));
+            $("#billRows").append(row);
+            return prices.daftari;
+        }
+        function correctPage(page){
+            if(page==="0" || page===0){
+                return 1;
+            }
+            return parseInt(page);
+        }
+        function addExtraRows(parent,product){
+            var hasExtra=false;
+            if(product.marriage){
+                $(parent).append(getExtraRow("ازدواج"));    
+                hasExtra=true;
+            }
+            if(product.talagh){
+                $(parent).append(getExtraRow("طلاق"));    
+                hasExtra=true;
+            }
+            if(product.wifeDie){
+                $(parent).append(getExtraRow("فوت همسر"));    
+                hasExtra=true;
+            }
+            if(product.child){
+                $(parent).append(getExtraRow(product.childCount+" فرزند"));    
+                hasExtra=true;
+            }
+            if(product.die){
+                $(parent).append(getExtraRow("فوت صاحب شناسنامه"));    
+            }
+            if(product.desc){
+                $(parent).append(getExtraRow("توضیحات شناسنامه"));
+                hasExtra=true;
+            }
+            if(product.mohrCount){
+                $(parent).append(getExtraRow(product.mohrCount+" صفحه مهر شده"));    
+                hasExtra=true;
+            }
+            if(product.vizaCount){
+                $(parent).append(getExtraRow(product.vizaCount+" ویزا"));    
+                hasExtra=true;
+            }
+            if(product.entghalCount){
+                $(parent).append(getExtraRow(product.entghalCount+" انتقال سند"));    
+                hasExtra=true;
+            }
+            if(!hasExtra){
+                $(parent).append(getExtraRow("-"));    
+            }
+        }
+        function getExtraRow(title){
+            return $("<div>"+title+"</div>");
+        }
+        function getRowPrice(product){
+            var prices=JSON.parse($("#txtPrice").val());
+            var total=0;
+            var translateBase=product.product.price;
+            if(product.lang!=="1"){
+                translateBase=product.product.extra;
+            }
+            var pages=parseInt(product.pages);
+            if(pages>1){
+                total=translateBase*pages;
+            }
+            else{
+                total=translateBase;
+            }
+            if(product.marriage){
+                total+=prices.shenas_item;
+            }
+            if(product.talagh){
+                total+=prices.shenas_item;
+            }            
+            if(product.wifeDie){
+                total+=prices.shenas_item;
+            }           
+            if(product.die){
+                total+=prices.shenas_item;
+            }           
+            if(product.desc){
+                total+=prices.shenas_item;
+            }          
+            total+=prices.shenas_item*product.childCount;
+            total+=prices.passport*(product.mohrCount+product.vizaCount);
+            total+=prices.enteghal*(product.entghalCount);
+            if(product.clone!=="1"){
+                total+=(parseInt(product.clone)-1)*total/4;
+            }
+            return total;
+        }
+</script>
+{% endblock %}
+
+
+{% block content %}
+<div class="stepper">
+  <div id="step1" class="circle done"> <span class="label">1</span>
+    <span class="title">انتخاب مدارک</span>
+
+  </div> <span class="bar done"></span>
+
+  <div id="step2" class="circle done"> <span class="label">2</span>
+    <span class="title"> پیوست مدارک</span>
+
+  </div> <span class="bar done"></span>
+
+  <div id="step3" class="circle done"> <span class="label">3</span>
+    <span class="title">تعیین آدرس</span>
+
+  </div> <span class="bar done"></span>
+
+  <div id="step4" class="circle done"> <span class="label">4</span>
+    <span class="title">انتخاب دفتر ترجمه</span>
+
+  </div> <span class="bar done"></span>
+
+  <div id="step5" class="circle active"> <span class="label">5</span>
+    <span class="title">صورتحساب</span>
+
+  </div>
+</div>
+<div class="container mainContainer" style="text-align: right;direction: rtl;">
+    <input id="txtPrice" style="display: none" value="{{prices}}"/>
+    <br/>
+    <ul style="margin-right: 10px; color: #031fb0;">
+        <li>کلیه قیمت ها منطبق با قیمت مصوب انجمن مترجمان رسمی است.</li>
+        <li>قیمت ها به تومان می باشد.</li>
+        <li>هزینه پیک بر اساس فاصله شما تا دفتر ترجمه بر اساس نرخ الوپیک محاسبه شده است.</li>
+    </ul>
+    <br/>
+    <div id="billHeader" class="row">
+        <div class="col-2">نوع مدرک</div>
+        <div class="col-2">تعداد صفحه</div>
+        <div class="col-2">تعداد نسخه</div>
+        <div class="col-2">موارد اضافه</div>
+        <div class="col-2">قیمت پایه</div>
+        <div class="col-2">جمع</div>
+    </div>
+    <div id="billRows">
+    </div>
+    <div class="centerDetails row">
+        <div class="col-12">
+            <div style="color:  #2da0df;margin-bottom: 5px;">مشخصات دفتر ترجمه</div>
+            <div class="centerLabel">
+                <span id="centerTitle" class="centerFieldValue"></span>
+            </div>
+            <div class="centerLabel">
+                <span>مترجم مسئول: </span>
+                <span id="manager" class="centerFieldValue"></span>
+            </div>
+            <div class="centerLabel">
+                <span>آدرس:  </span>
+                <span id="address" class="centerFieldValue"></span>
+            </div>
+            <div class="centerLabel">
+                <span>تلفن: </span>
+                <span id="phone" class="centerFieldValue"></span>
+            </div>
+        </div>
+    </div>
+    <div class="centerDetails row">
+        <div class="col-12">
+            <div style="color:  #2da0df;margin-bottom: 5px;">مشخصات تحویل گیرنده مدارک</div>
+            <div class="centerLabel">
+                <span id="centerTitle" class="centerFieldValue"></span>
+            </div>
+            <div class="centerLabel">
+                <span>تحویل گیرنده: </span>
+                <span id="customer" class="centerFieldValue"></span>
+            </div>
+            <div class="centerLabel">
+                <span>آدرس:  </span>
+                <span id="customerAddress" class="centerFieldValue"></span>
+            </div>
+            <div class="centerLabel">
+                <span>موبایل: </span>
+                <span id="customerMobile" class="centerFieldValue"></span>
+            </div>
+        </div>
+    </div>
+    <form method="post" action="gopay">
+        <input name="data" id="txtData" type="text" style="display: none;"/>
+        <button class="btn btn-primary topButton" style="margin-top:10px;float: left;margin-bottom:10px;" type="submit">پرداخت و ثبت سفارش</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.twig' %}
+
+{% block title %}ورود به صفحه مترجمان{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#name").focus();
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    });
+</script>
+{% endblock %}
+
+
+{% block content %}
+<form class="needs-validation" style="margin-top: 100px;text-align: right;" method="post" action="domlogin" novalidate>
+
+    <div class="form-group row">
+        <label for="staticEmail" class="col-3 col-sm-2 col-form-label">شماره موبایل</label>
+        <div class="col-9 col-sm-10">
+            <input placeholder="مثلا 09123334444" required name="mobile" type="text" class="form-control" id="mobile"  pattern=".{11,11}">
+            <div class="invalid-feedback">
+                لطفا شماره موبایل را به درستی وارد کنید
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputPassword" class="col-3 col-sm-2 col-form-label">رمز</label>
+        <div class="col-9 col-sm-10">
+            <input required name="password" type="password" class="form-control" id="password"   pattern=".{6,16}"/>
+            <div class="invalid-feedback">
+                لطفا رمز خود را به درستی وارد کنید
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end">
+        <div class="error">{{error}}</div>
+        <input style="display: none;" name="redirect" value="{{redirect}}" />
+        <a href="forget"> <div class="formButton btn btn-primary topButton">رمز را فراموش کردم</div></a>
+        <button type="submit" class="formButton btn btn-primary topButton">ورود</button>
+    </div>
+
+</form>
+{% endblock %}

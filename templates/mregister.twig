@@ -1,0 +1,201 @@
+{% extends 'base.twig' %}
+
+{% block title %}فعال سازی دفتر ترجمه رسمی{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    const cloudName = 'dr4eclxx1';
+    const unsignedUploadPreset = 'rasoul';
+    $(document).ready(function() {
+        $("#name").focus();
+        $(".btnUpload").click(function (e){
+            uploadClicked(e);
+        });
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    });
+    function uploadClicked(e){
+        var elem=$(e.target);
+        if(elem.hasClass("imgPreview") || elem.hasClass("uploadTitle")){
+            elem=elem.parent();
+        }
+        
+        var input=elem.find("input")[0];
+        if(input){
+            input.click();
+        }
+        
+    }
+    
+    function handleFiles(files,e){
+          var preview= $(e.target).parent().find(".imgPreview")
+          var prg= $(e.target).parent().find(".prg")
+          for (var i = 0; i < files.length; i++) {
+            uploadFile(files[i],preview,prg); // call the function to upload the file
+          }
+    }
+    function uploadFile(file,preview,prg) {
+      var url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+      var xhr = new XMLHttpRequest();
+      var fd = new FormData();
+      xhr.open('POST', url, true);
+      xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      $(prg).css("width", "0");
+      xhr.upload.addEventListener("progress", function(e) {
+        var progress = Math.round((e.loaded * 100.0) / e.total);
+        $(prg).css("width",progress + "%");
+      });
+
+      xhr.onreadystatechange = function(e) {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          var response = JSON.parse(xhr.responseText);
+          var url = response.secure_url;
+          var tokens = url.split('/');
+          tokens.splice(-2, 0, 'w_768,c_scale');
+          var url=tokens.join('/');
+          $(preview).attr("src",url);
+          $(prg).css("width","0");
+          $("#"+ $(preview).parent().data().id).val(url);
+        }
+      };
+
+      fd.append('upload_preset', unsignedUploadPreset);
+      fd.append('file', file);
+      xhr.send(fd);
+    }
+</script>
+{% endblock %}
+
+
+{% block content %}
+<div style="border-radius: 5px; text-align: justify;direction: rtl;background-color: #fdfdfd;color: #2891c2;padding: 10px;font-size: 10pt;border: solid 1px #d4d4d4;">
+    <div style="color: #0d00d3;font-size: 12pt;">{{user.name}} عزیز</div>
+    <br/>
+    خوشحالیم که {{app_name}} رو برای همکاری انتخاب کردید. شما میتونید از طریق این صفحه دفتر ترجمه رسمی خودتون رو در {{app_name}} ثبت کنید و به صورت آنلاین سفارش ترجمه بگیرید. {{app_name}} امکاناتی رو برای شما فراهم می کنه تا مشتری ها بتونن خیلی راحت شما رو پیدا کنن. ما تسهیلاتی رو برای سهولت ارتباط با مشتری و دریافت و ارسال مدارکشون فراهم کردیم تا شما فقط روی کار ترجمه متمرکز بشید و نگران بقه ماجرا نباشید.
+    <br/>
+    محاسبه قیمت ها بر اساس نرخ تعیین شده توسط انجمن مترجمان رسمیه. با داشتن حساب زرین پال به محض انجام تراکنش تسویه انجام میشه. از هر تراکنش 5 درصد به عنوان کارمزد به {{app_name}} تعلق می گیره. بازم اگه سوالی داشتید مشاور آنلاین ما آماده پاسخگویی به شماست.
+    
+</div>
+
+<form class="needs-validation" style="margin-top: 10px;text-align: right;" method="post" action="doact" novalidate>
+
+    <div class="form-group row">
+        <label for="staticEmail" class="col-3 col-sm-2 col-form-label">رایانامه</label>
+        <div class="col-9 col-sm-10">
+            <input placeholder="مثل   gling@gmail.com" required name="mail" type="email" class="form-control" id="staticEmail">
+            <div class="invalid-feedback">
+                لطفا آدرس رایانامه را به درستی وارد کنید
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputPassword" class="col-3 col-sm-2 col-form-label">رمز</label>
+        <div class="col-9 col-sm-10">
+            <input required name="password" type="password" class="form-control" id="password"   pattern=".{6,16}"/>
+            <div class="invalid-feedback">
+                لطفا رمز خود را به درستی وارد کنید. رمز باید حداقل 6 کاراکتر داشته باشد.
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="account" class="col-3 col-sm-2 col-form-label">شماره حساب زرین پال</label>
+        <div class="col-9 col-sm-10">
+            <input placeholder="مثل  328734" required name="account" type="text" class="form-control" id="account"   pattern=".{6,7}"/>
+            <small id="emailHelp" class="form-text text-muted">شماره حساب زرین پال ندارید یا نمیدونید چیه؟ <a  target="_blank" href="https://my.zarinpal.com/auth/register">اینجا</a> رو کلیک کنید.</small>
+            <div class="invalid-feedback">
+                لطفا شماره حساب را به درستی وارد کنید
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-3 col-sm-2 col-form-label">محدوده پیک رایگان</label>
+        <div class="col-9 col-sm-10">
+            <select class="form-control" id="lang" name="carrier">
+                <option selected value="0">هزینه پیک بر عهده مشتری</option>
+                <option value="1">تا 3 کیلومتری دفتر ترجمه</option>
+                <option value="2">تا 6 کیلومتری دفتر ترجمه</option>
+                <option value="3">تا 10 کیلومتری دفتر ترجمه</option>
+                <option value="4">تا 20 کیلومتری دفتر ترجمه</option>
+                <option value="5">تا 30 کیلومتری دفتر ترجمه</option>
+                <option value="6">تا 50 کیلومتری دفتر ترجمه</option>
+                <option value="7">ارسال رایگان به همه جا</option>
+            </select>
+            <small id="emailHelp" class="form-text text-muted">طبیعتا دفاتری که پیک رایگان دارن برای مشتری جذاب ترن! </small>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="account" class="col-3 col-sm-2 col-form-label">تعداد روز کاری برای ترجمه کارت ملی</label>
+        <div class="col-9 col-sm-10">
+            <input placeholder="مثل 2" required name="duration" type="number" class="form-control" id="days"/>
+            <small id="emailHelp" class="form-text text-muted">با استفاده از این عدد تخمین می زنیم ترجمه مدارک کاربر چند روز زمان می بره. طبیعتا هر چه سرعت ترجمه بالاتر باشه برای مشتری جذابیت بیشتری داره! </small>
+            <div class="invalid-feedback">
+                لطفا تعداد روز کاری برای ترجمه کارت ملی را تعیین کنید.
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-6 col-sm-3 btnUpload">
+            <div class="uploadItem" data-id="license">
+                <input type="file" multiple="" accept="image/*" style="display:none" onchange="handleFiles(this.files,event)">
+                <div class="prg"></div>
+                <img src="images/upload.png" class="imgPreview">
+                <div class="uploadTitle">تصویر پروانه ترجمه</div>
+ 
+            </div>
+        </div>
+        <div class="col-6 col-sm-3 btnUpload">
+            <div class="uploadItem" data-id="javaz">
+                <input type="file" multiple="" accept="image/*" style="display:none" onchange="handleFiles(this.files,event)">
+                <div class="prg"></div>
+                <img src="images/upload.png" class="imgPreview">
+                <div class="uploadTitle">تصویر جواز کسب</div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-9 col-sm-10">
+            <input required name="license" type="text" class="form-control urlHolder" id="license"/>
+            <div class="invalid-feedback">
+                لطفا تصویر پروانه ترجمه را آپلود کنید.
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-9 col-sm-10">
+            <input required name="javaz" type="text" class="form-control urlHolder" id="javaz"/>
+            <div class="invalid-feedback">
+                   لطفا تصویر جواز کسب را آپلود کنید.
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+      <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+        <label style="margin-right: 20px;" class="form-check-label" for="invalidCheck">
+            <a target="_blank" href="terms">شرایط و ضوابط همکاری با {{app_name}} </a>
+          را مطالعه کرده و با آن موافقم.
+        </label>
+        <div class="invalid-feedback">
+          ابتدا باید با شرایط و ضوابط همکاری موافقت کنید.
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="d-flex justify-content-end">
+        <div class="error">{{error}}</div>
+        <button type="submit" class="formButton btn btn-primary topButton">ثبت نام در {{app_name}}</button>
+    </div>
+
+</form>
+{% endblock %}

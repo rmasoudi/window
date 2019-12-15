@@ -1,0 +1,245 @@
+{% extends 'base.twig' %}
+
+{% block title %}انتخاب مدارک ترجمه رسمی{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+	$(document).ready(function(){     
+            $(".circle").click(function (e){
+                stepClicked(e);
+            });
+            loadCart();
+	});
+        function loadCart(){
+            var products= getProducts();
+            var total=0;
+            for(var i=0;i<products.length;i++){
+                 total+=addProductRow(products[i],i);
+            }
+            $("#billRows").find(".billRow").last().css("border-bottom","solid 1px #9999ff");
+        }
+        function correctPage(page){
+            if(page==="0" || page===0){
+                return 1;
+            }
+            return parseInt(page);
+        }
+        function addProductRow(product,index){
+            var row=$("<div></div>");
+            row.addClass("billRow");
+            row.data("index",index);
+            if(index%2===0){
+                row.addClass("billRowEven");
+            }
+            else{
+                row.addClass("billRowOdd");
+            }
+            row.addClass("row");
+            row.append($("<div class='col-4'>"+product.product.title+"</div>"));
+            row.append($("<div class='col-2'>"+correctPage(product.clone)+"</div>"));
+            row.append($("<div class='col-2'>"+correctPage(product.product.price)+"</div>"));
+            var total=getRowPrice(product);
+            row.append($("<div class='col-2'>"+total+"</div>"));
+            
+            var changeRow=$("<div class='row'></div>");
+            var removeButton=$("<div class='cartButton cartButtonEdit'>حذف</div>");
+            var editButton=$("<div class='cartButton cartButtonRemove'>ویرایش</div>");
+            removeButton.click(function(){
+                var index= $(this).parent().parent().parent().data().index;
+                removeProduct(index);
+                $(this).parent().parent().parent().parent().remove();
+            });            
+            editButton.click(function(){
+                 var index= $(this).parent().parent().parent().parent().data().index;
+                 var product=getProducts()[index];
+                 setEditing(index,product);
+                 window.location=product.product.url;
+             });
+            
+            
+            var removeCol=$("<div class='col-12'></div>");
+            var editCol=$("<div class='col-12'></div>");
+            removeCol.append(removeButton);
+            editCol.append(editButton);
+            changeRow.append(removeCol);
+            changeRow.append(editCol);
+            
+            var lastCol=$("<div class='col-2'></div>");
+            lastCol.append(changeRow);
+            row.append(lastCol);
+            
+            $("#billRows").append(row);
+            return total;
+        }
+        function addExtraRows(parent,product){
+            var hasExtra=false;
+            if(product.marriage){
+                $(parent).append(getExtraRow("ازدواج"));    
+                hasExtra=true;
+            }
+            if(product.talagh){
+                $(parent).append(getExtraRow("طلاق"));    
+                hasExtra=true;
+            }
+            if(product.wifeDie){
+                $(parent).append(getExtraRow("فوت همسر"));    
+                hasExtra=true;
+            }
+            if(product.child){
+                $(parent).append(getExtraRow(product.childCount+" فرزند"));    
+                hasExtra=true;
+            }
+            if(product.die){
+                $(parent).append(getExtraRow("فوت صاحب شناسنامه"));    
+            }
+            if(product.desc){
+                $(parent).append(getExtraRow("توضیحات شناسنامه"));
+                hasExtra=true;
+            }
+            if(product.mohrCount){
+                $(parent).append(getExtraRow(product.mohrCount+" صفحه مهر شده"));    
+                hasExtra=true;
+            }
+            if(product.vizaCount){
+                $(parent).append(getExtraRow(product.vizaCount+" ویزا"));    
+                hasExtra=true;
+            }
+            if(product.entghalCount){
+                $(parent).append(getExtraRow(product.entghalCount+" انتقال سند"));    
+                hasExtra=true;
+            }
+            if(!hasExtra){
+                $(parent).append(getExtraRow("-"));    
+            }
+        }
+        function getExtraRow(title){
+            return $("<div>"+title+"</div>");
+        }
+        function getRowPrice(product){
+            var prices=JSON.parse($("#txtPrice").val());
+            var total=0;
+            var translateBase=product.product.price;
+            if(product.lang!=="1"){
+                translateBase=product.product.extra;
+            }
+            var pages=parseInt(product.pages);
+            if(pages>1){
+                total=translateBase*pages;
+            }
+            else{
+                total=translateBase;
+            }
+            if(product.marriage){
+                total+=prices.shenas_item;
+            }
+            if(product.talagh){
+                total+=prices.shenas_item;
+            }            
+            if(product.wifeDie){
+                total+=prices.shenas_item;
+            }           
+            if(product.die){
+                total+=prices.shenas_item;
+            }           
+            if(product.desc){
+                total+=prices.shenas_item;
+            }          
+            total+=prices.shenas_item*product.childCount;
+            total+=prices.passport*(product.mohrCount+product.vizaCount);
+            total+=prices.enteghal*(product.entghalCount);
+            if(product.clone!=="1"){
+                total+=(parseInt(product.clone)-1)*total/4;
+            }
+            return total;
+        }
+	function categClick(id,e){
+		$(".category").removeClass("categorySelected");
+		$("#categ"+id).addClass("categorySelected");
+		
+		if(id===0){
+			for(var i=1;i<=5;i++){
+				$(".categ"+i).removeClass("hidden");
+				$(".categ"+i).addClass("visible");
+			}
+		}
+		else{
+			for(var i=1;i<=5;i++){
+				if(i===id){
+					$(".categ"+i).removeClass("hidden");
+					$(".categ"+i).addClass("visible");					
+				}
+				else{
+					$(".categ"+i).removeClass("visible");
+					$(".categ"+i).addClass("hidden");					
+				}
+			}
+		}
+	}
+        function productClick(e){
+            var href = this.href;
+            setEditing(-1,null);
+            location.href = href;
+        }
+</script>
+{% endblock %}
+
+
+{% block content %}
+    <input id="txtPrice" style="display: none" value="{{prices}}"/>
+<div class="stepper">
+  <div id="step1" class="circle active"> <span class="label">1</span>
+    <span class="title">انتخاب مدارک</span>
+
+  </div> <span class="bar active"></span>
+
+  <div id="step2" class="circle"> <span class="label">2</span>
+    <span class="title"> پیوست مدارک</span>
+
+  </div> <span class="bar"></span>
+
+  <div id="step3" class="circle"> <span class="label">3</span>
+    <span class="title">تعیین آدرس</span>
+
+  </div> <span class="bar"></span>
+
+  <div id="step4" class="circle"> <span class="label">4</span>
+    <span class="title">انتخاب دفتر ترجمه</span>
+
+  </div> <span class="bar"></span>
+
+  <div id="step5" class="circle"> <span class="label">5</span>
+    <span class="title">صورتحساب</span>
+
+  </div>
+</div>
+<div id="billHeader" class="row">
+        <div class="col-4">نوع مدرک</div>
+        <div class="col-2">تعداد نسخه</div>
+        <div class="col-2">قیمت پایه</div>
+        <div class="col-2">جمع</div>
+        <div class="col-2"></div>
+    </div>
+    <div id="billRows">
+    </div>
+<a href="پیوست_مدارک_ترجمه_رسمی"> <div style="margin-top: 10px;" class="btn btn-primary topButton">ثبت سفارش</div></a>
+
+<div id="page1" class="row" style="direction:rtl;margin-top:10px;">
+    <div class="col-4 col-sm-2">
+                <div id="categ0" onclick="categClick(0);" class="category categorySelected" >همه مدارک</div>
+                <div id="categ1" onclick="categClick(1);" class="category">احوال شخصیه</div>
+                <div id="categ3" onclick="categClick(3);" class="category">اسناد</div>
+                <div id="categ2" onclick="categClick(2);" class="category">مدارک تحصیلی</div>
+                <div id="categ4" onclick="categClick(4);" class="category">شرکت ها و دفاتر</div>
+                <div id="categ5" onclick="categClick(5);" class="category">گواهی و پروانه</div>
+    </div>
+    <div class="col-8 col-sm-10">
+        <div class="row" style="overflow:auto;margin-top: 10px;height: 290px;background-color: #f1f6ff;">
+            {% for product in products %}
+            <div class='col-6 col-sm-3 categ{{product.category}}'><a onclick="productClick(event);" href='{{product.url}}'> <div class='product'>{{product.title}}</div> </a></div>
+            {% endfor %}
+        </div>
+    </div>
+	
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends 'base.twig' %}
+
+{% block title %}لیست دفاتر ترجمه رسمی{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+	$(document).ready(function(){  
+            
+            $(".circle").click(function (e){
+                stepClicked(e);
+            });
+            
+
+           
+           $(".btnSort").click(function (){
+                $(".btnSort").removeClass("btnSort-active");    
+                $(this).addClass("btnSort-active");
+                sortClicked();
+           });
+           $("#nearest").click();
+           
+	});
+        
+ 
+        
+        function sortClicked(){
+            var sort= $(".btnSort-active").data().sort;
+            var address=getAddress();
+            var point="35.729357,51.437731";
+            if(address!==null && address.item.point!==undefined){
+                point=address.item.point;
+            }
+            $("#centerList").html("");
+            $("#loader").removeClass("hidden");
+            fetch("centers?sort="+sort+"&point="+point,{
+                  method:"get"
+              })
+              .then(res=>res.json())
+              .then(
+                  (result) => {
+                    $("#loader").addClass("hidden");
+                    for(var i=0;i<result.length;i++){
+                        var centerElem=getCenterItem(result[i],sort,point);
+                        $("#centerList").append(centerElem);
+                    }
+                    $(".list-group-item").first().addClass("active");
+                    $(".list-group-item").click(function (){
+                        $(".list-group-item").removeClass("active");
+                        $(this).addClass("active");
+                         var index = $(this).index();
+                         var item=$(this).data().item;
+                         setCenter(index,item);
+                    });
+                      
+                  },
+                  (error) => {
+                      $("#loader").addClass("hidden");
+                  }
+              );
+        }
+        
+        function getCenterItem(center,sort,point){
+                var dist=getDistance(center.loc,point);
+                var a=$(`<div href="#" style="cursor: pointer;" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">دفتر ترجمه رسمی شماره `+center.code+` `+center.city+`</h6>
+                        <small style="color: #00469c">`+center.manager+`</small>
+                    </div>
+                    <a target="_blank" href="دفتر_ترجمه_رسمی_شماره_`+center.code+`_`+center.city+`" class="centerLink">مشاهده جزئیات</a>
+                    <small class="mb-1">`+center.address+`<br/></small>
+                    <small>`+center.phone+`</small>
+                    <br/>
+                    <small class="distance">`+prettify(dist)+`</small>
+                    <br/>
+                    <small class="duration">`+predictDays(center.duration)+`</small>
+                    <br/>
+                    <div class="freeDelivery">پیک رایگان</div>
+                    
+                </div>`);
+                a.data("item",center);
+                $(a).click(function (){
+                      $(".list-group-item").removeClass("active");
+                      $(this).addClass("active");
+                       var index = $(this).index();
+                       var item=$(this).data().item;
+                       setCenter(index,item);
+                  });      
+                  if(!isFreeCarrier(center,dist)){
+                      a.find(".freeDelivery").remove();
+                  }
+                
+                return a;
+        }
+        
+  
+       function prettify(sort){
+            if(sort<1.0){
+                return "فاصله تا شما: "+ Math.round(sort*1000)+" متر";
+            }
+            else{
+                return "فاصله تا شما: "+  parseFloat(Math.round(sort * 100) / 100).toFixed(2)+" کیلومتر";
+            }
+        }
+        
+        function predictDays(duration){
+            var products=getProducts();
+            var counter=0;
+            for(var i=0;i<products.length;i++){
+                counter++;
+                counter+=parseInt(products[i].pages);
+            }
+            return "زمان ترجمه: حدود  "+ counter*duration+" روز";
+        }
+        
+</script>
+{% endblock %}
+
+
+{% block content %}
+<div class="stepper">
+  <div id="step1" class="circle done"> <span class="label">1</span>
+    <span class="title">انتخاب مدارک</span>
+
+  </div> <span class="bar done"></span>
+
+  <div id="step2" class="circle done"> <span class="label">2</span>
+    <span class="title"> پیوست مدارک</span>
+
+  </div> <span class="bar done"></span>
+
+  <div id="step3" class="circle done"> <span class="label">3</span>
+    <span class="title">تعیین آدرس</span>
+
+  </div> <span class="bar done"></span>
+
+  <div id="step4" class="circle active"> <span class="label">4</span>
+    <span class="title">انتخاب دفتر ترجمه</span>
+
+  </div> <span class="bar active"></span>
+
+  <div id="step5" class="circle"> <span class="label">5</span>
+    <span class="title">صورتحساب</span>
+
+  </div>
+</div>
+
+<div class="container mainContainer">
+	<div id="geoHeader" class="row">
+            <div data-sort="loc" class="btnSort" id="nearest">نزدیکترین ها</div>
+            <div data-sort="score" class="btnSort">محبوب ترین ها</div>
+            <div data-sort="duration" class="btnSort">سریعترین ها</div>
+	</div>
+        <div class="d-flex justify-content-center">
+            <div id="loader" class="spinner-border text-info hidden" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+
+	<div class="row">
+            <div id="centerList" class="list-group" style="width: 100%;direction: rtl;">
+            </div>
+	</div>
+    <a href="bill"> <div class="btn btn-primary topButton" style="margin-top:10px;">ادامه</div></a>
+</div>
+
+{% endblock %}

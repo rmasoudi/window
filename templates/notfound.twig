@@ -1,0 +1,21 @@
+{% extends 'base.twig' %}
+
+{% block title %}صفحه یافت نشد{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="https://static.neshan.org/sdk/openlayers/5.3.0/ol.css">
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        $(document).ready(function (){
+        });
+    </script>
+{% endblock %}
+
+
+{% block content %}
+    <div style="text-align: center;font-size: 16pt;margin-top: 50px;color: #1182b0;">چنین صفحه ای وجود ندارد!</div>
+    
+    <div class="d-flex justify-content-center">
+        <a href="./"> <div style="width: 180px;margin-top: 10px;" class="formButton btn btn-primary topButton">بازگشت به صفحه اصلی</div></a>
+    </div>
+{% endblock %}

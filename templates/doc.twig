@@ -1,0 +1,244 @@
+{% extends 'base.twig' %}
+
+{% block title %}ترجمه رسمی {{doc.title}}{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+	$(document).ready(function(){  
+                bindChild();
+                loadEditingDoc();
+	});
+        
+        function bindChild(){
+            chk= document.getElementById('chkChild');
+            if(chk!==undefined && chk !==null){
+                chk.addEventListener('change', (event) => {
+                    if (event.target.checked) {
+                        $("#childCountPanel").removeClass("makhfi")
+                    } else {
+                        $("#childCountPanel").addClass("makhfi")
+                    }
+                  });
+            }
+            
+        }
+        function apply(){
+            var item={
+              product:$("#productForm").data().item,  
+              lang:getCount("lang"),
+              clone:getCount("clone"),
+              pages:getCount("pageCount"),
+              marriage:elementChecked("chkMarriage"),
+              talagh:elementChecked("chkTalagh"),
+              wifeDie:elementChecked("chkWifeDie"),
+              child:elementChecked("chkChild"),
+              die:elementChecked("chkDie"),
+              desc:elementChecked("chkDesc"),
+              childCount:getCount("childCount"),
+              mohrCount:getCount("mohrCount"),
+              vizaCount:getCount("vizaCount"),
+              entghalCount:getCount("enteghalCount")
+            };
+            var editing= getEditing();
+            if(editing==null){
+                addProduct(item);   
+            }
+            else{
+                editProduct(editing.index,item);
+            }
+            window.location="انتخاب_مدارک_ترجمه_رسمی";
+        }
+        function getCount(id){
+            if($("#"+id)[0]===undefined){
+                return 0;
+            }
+            return $("#"+id).val();
+        }
+        function cancel(){
+            window.location="انتخاب_مدارک_ترجمه_رسمی";
+        }
+        function checkElement(id){
+            $("#"+id).prop("checked", true);
+        }
+        function elementChecked(id){
+            if($("#"+id)[0]===undefined){
+                return false;
+            }
+            return $("#"+id)[0].checked;
+        }
+        
+        function loadEditingDoc(){
+            var editing=getEditing();
+            if(editing===null){
+                return;
+            }
+            var product=editing.product;
+            if(product.child){
+                checkElement("chkChild");
+                $("#childCountPanel").removeClass("makhfi");
+            }
+            if(product.desc){
+                checkElement("chkDesc");
+            }
+            if(product.die){
+                checkElement("chkDie");
+            }
+            if(product.marriage){
+                checkElement("chkMarriage");
+            }
+            if(product.talagh){
+                checkElement("chkTalagh");
+            }
+            if(product.wifeDie){
+                checkElement("chkWifeDie");
+            }
+            $("#clone").val(product.clone);
+            $("#lang").val(product.lang);
+            if($("#pageCount")[0]){
+                $("#pageCount").val(product.pages);
+            }
+            if($("#childCount")[0]){
+                $("#childCount").val(product.childCount);
+            }
+            if($("#mohrCount")[0]){
+                $("#mohrCount").val(product.mohrCount);
+            }
+            if($("#vizaCount")[0]){
+                $("#vizaCount").val(product.vizaCount);
+            }
+            if($("#enteghalCount")[0]){
+                $("#enteghalCount").val(product.enteghalCount);
+            }
+            
+        }
+        
+</script>
+{% endblock %}
+
+
+{% block content %}
+<div class="stepper">
+  <div class="circle active"> <span class="label">1</span>
+    <span class="title">انتخاب مدارک</span>
+
+  </div> <span class="bar active"></span>
+
+  <div class="circle"> <span class="label">2</span>
+    <span class="title"> پیوست مدارک</span>
+
+  </div> <span class="bar"></span>
+
+  <div class="circle"> <span class="label">3</span>
+    <span class="title">تعیین آدرس</span>
+
+  </div> <span class="bar"></span>
+
+  <div class="circle"> <span class="label">4</span>
+    <span class="title">انتخاب دفتر ترجمه</span>
+
+  </div> <span class="bar"></span>
+
+  <div class="circle"> <span class="label">5</span>
+    <span class="title">صورتحساب</span>
+
+  </div>
+</div>
+
+<div class="container mainContainer">
+    <br/>
+    <h5 style="text-align: right;color: #0291bb;">{{doc.title}}</h5>
+    <form data-item="{{doc | json_encode()}}" id="productForm" class="needs-validation" style="margin-top: 100px;text-align: right;color: #066884;" novalidate>
+    <div class="form-group row">
+        <label for="lang" class="col-3 col-form-label">زبان ترجمه</label>
+        <div class="col-9">
+            <select class="form-control" id="lang" name="lang">
+                <option selected value="1">انگلیسی</option>
+                <option value="2">فرانسوی</option>
+                <option value="3">آلمانی</option>
+                <option value="4">اسپانیایی</option>
+                <option value="5">چینی</option>
+                <option value="6">عربی</option>
+                <option value="7">اردو</option>
+                <option value="8">ژاپنی</option>
+                <option value="9">ترکی استانبولی</option>
+                <option value="10">ترکی آذری</option>
+                <option value="11">ایتالیایی</option>
+                <option value="12">روسی</option>
+                <option value="13">ارمنی</option>
+                <option value="14">کردی</option>
+            </select>
+            <div class="invalid-feedback">
+                لطفا زبان ترجمه را انتخاب کنید
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="lang" class="col-3 col-form-label">تعداد نسخه ترجمه</label>
+        <div class="col-9">
+            <input required name="clone" placeholder="چند نسخه ترجمه شده نیاز دارید؟" type="number" value="1" class="form-control" id="clone">
+            <div class="invalid-feedback">
+                لطفا تعداد نسخه را تعیین کنید
+            </div>
+        </div>
+    </div>
+    {% if doc.fi == true %}
+        <div class="form-group row">
+            <label for="lang" class="col-3 col-form-label">تعداد صفحه</label>
+            <div class="col-9">
+                <input required name="pageCount" placeholder="این سند چند صفحه است؟" type="number" value="1" class="form-control" id="pageCount">
+                <div class="invalid-feedback">
+                    لطفا تعداد صفحه را تعیین کنید
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if doc.id == 6 %}
+        <div class="form-group row">
+            <label for="lang" class="col-3 col-form-label">شامل موارد</label>
+            <div class="col-9">
+                <label style="margin-left: 10px" class="checkbox-inline"><input id="chkMarriage" type="checkbox" value="">ازدواج</label>
+                <label style="margin-left: 10px" class="checkbox-inline"><input id="chkTalagh" type="checkbox" value="">طلاق</label>
+                <label style="margin-left: 10px" class="checkbox-inline"><input id="chkWifeDie" type="checkbox" value="">فوت همسر</label>
+                <label style="margin-left: 10px" class="checkbox-inline"><input id="chkChild" type="checkbox" value="">فرزندان</label>
+                <label style="margin-left: 10px" class="checkbox-inline"><input id="chkDie" type="checkbox" value="">فوت صاحب شناسنامه</label>
+                <label style="margin-left: 10px" class="checkbox-inline"><input id="chkDesc" type="checkbox" value="">توضیحات</label>
+            </div>
+        </div>
+        <div id="childCountPanel" class="form-group row makhfi">
+            <label for="lang" class="col-3 col-form-label">تعداد فرزند</label>
+            <div class="col-9">
+                <input required type="number" value="0" class="form-control" id="childCount">
+                <div class="invalid-feedback">
+                    لطفا تعداد فرزند را تعیین کنید
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if doc.id == 29 %}
+        <div class="form-group row">
+            <label for="lang" class="col-3 col-form-label">تعداد صفحه شامل مهر</label>
+            <div class="col-9">
+                <input id="mohrCount" type="number" value="0" class="form-control">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="lang" class="col-3 col-form-label">تعداد صفحه روادید</label>
+            <div class="col-9">
+                <input id="vizaCount" type="number" value="0" class="form-control">
+            </div>
+        </div>
+    {% endif %}
+    {% if (doc.id == 94) or (doc.id == 102) %}
+        <div class="form-group row">
+            <label for="lang" class="col-3 col-form-label">تعداد صفحه انتقال سند</label>
+            <div class="col-9">
+                <input id="enteghalCount" type="number" value="0" class="form-control">
+            </div>
+        </div>
+    {% endif %}
+    <div class="error">{{error}}</div>
+</form>
+<div class="btn btn-primary topButton" onclick="apply();" style="margin-top:10px;">تایید</div>
+<div class="btn btn-primary topButton" onclick="cancel();" style="margin-top:10px;">انصراف</div>
+</div>
+
+{% endblock %}

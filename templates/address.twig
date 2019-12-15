@@ -1,0 +1,120 @@
+{% extends 'base.twig' %}
+
+{% block title %}تعیین آدرس تحویل مدارک ترجمه رسمی{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="https://static.neshan.org/sdk/openlayers/5.3.0/ol.css">
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        $(document).ready(function (){
+            $(".circle").click(function (e){
+                stepClicked(e);
+            });
+           $(".list-group-item").first().addClass("active");
+           $(".list-group-item").click(function (){
+               $(".list-group-item").removeClass("active");
+               $(this).addClass("active");
+                var index = $(this).index();
+                var item=$(this).data().item;
+                setAddress(index,item);
+           });
+           var selectedAddress=getAddress();
+           if(selectedAddress!=null){
+               $(".list-group-item").removeClass("active");
+               $($(".list-group-item")[selectedAddress.index]).click();
+           }
+        });
+        
+        function removeAddress(id){
+            if(confirm("آیا مطمئن هستید؟")){
+                fetch("remove_address?id="+id,{
+                    method:"get"
+                })
+                .then(res=>res.json())
+                .then(
+                    (result) => {
+                        location.reload();
+                    },
+                    (error) => {
+                        location.reload();
+                    }
+                );
+            }
+        }
+        function editAddress(id){
+            window.location="editaddress?id="+id;
+        }
+    </script>
+{% endblock %}
+
+
+{% block content %}
+<div class="stepper">
+  <div id="step1" class="circle done"> <span class="label">1</span>
+    <span class="title">انتخاب مدارک</span>
+
+  </div> <span class="bar done"></span>
+
+  <div id="step2" class="circle done"> <span class="label">2</span>
+    <span class="title"> پیوست مدارک</span>
+
+  </div> <span class="bar done"></span>
+
+  <div id="step3" class="circle active"> <span class="label">3</span>
+    <span class="title">تعیین آدرس</span>
+
+  </div> <span class="bar active"></span>
+
+  <div id="step4" class="circle"> <span class="label">4</span>
+    <span class="title">انتخاب دفتر ترجمه</span>
+
+  </div> <span class="bar"></span>
+
+  <div id="step5" class="circle"> <span class="label">5</span>
+    <span class="title">صورتحساب</span>
+
+  </div>
+</div>
+    {% if user == null %}
+        <div class="info">لطفا وارد سیستم شوید. برای ورود 
+            <a href="login">اینجا</a>
+            را کلیک کنید</div>
+        <div class="info"> برای ثبت نام
+        <a href="register">اینجا</a>
+        را کلیک کنید</div>
+    
+    <div class="info">
+        نگران نباشید بعد از ورود به همین مرحله باز می گردید!
+    </div>
+    {% else %}
+        {% if addressList != null %}
+                    <div class="row">
+                        {% for address in addressList %}
+                        <div data-item="{{address | json_encode()}}"  class="list-group-item list-group-item-action flex-column align-items-start" style="cursor: pointer;">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{address.name}}</h6>
+                                    <small style="color: #00469c">{{address.address}}</small>
+                                </div>
+                                <small class="mb-1">{{address.mobile}}</small>
+                                <br/>
+                                <div onclick="removeAddress({{address.id}});" class="btn listButton">حذف</div>
+                                <div onclick="editAddress({{address.id}});" class="btn listButton">ویرایش</div>
+                            </div>
+                        {% endfor %}
+                        <a href="newaddress" style="width: 100%;"> 
+                            <div  class="list-group-item list-group-item-action flex-column align-items-start" style="cursor: pointer;">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <div style="width: 120px;margin-right: auto;margin-left: auto;">آدرس جدید</div>
+                                    </div>
+                                    <small class="mb-1"></small>
+                                    <br/>
+                             </div>
+                        </a>
+
+                    </div>
+        {% endif %}
+        <a href="لیست_دفاتر_ترجمه_رسمی"> <div class="btn btn-primary topButton" style="margin-top:10px;margin-bottom:10px;">ادامه</div></a>
+        
+    {% endif %}
+
+{% endblock %}

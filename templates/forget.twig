@@ -1,0 +1,48 @@
+{% extends 'base.twig' %}
+
+{% block title %}بازیابی رمز{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#name").focus();
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    });
+</script>
+{% endblock %}
+
+
+{% block content %}
+<form class="needs-validation" style="margin-top: 100px;" method="post" action="sendpass" novalidate>
+
+    <div class="form-group row">
+        <label for="staticEmail" class="col-sm-2 col-form-label">رایانامه</label>
+        <div class="col-sm-10">
+            <input required name="mail" type="email" class="form-control" id="staticEmail">
+            <div class="invalid-feedback">
+                لطفا آدرس رایانامه را به درستی وارد کنید
+            </div>
+        </div>
+    </div>
+    <div class="error">{{error}}</div>
+    {% if success == true %}
+        <div class="success">
+            رمز به ایمیل شما ارسال شد. لطفا ایمیل خود را چک کنید.
+        </div>
+    {% else %}
+        <button type="submit" class="btn btn-primary topButton">ارسال</button>
+    {% endif %}
+    
+</form>
+{% endblock %}
