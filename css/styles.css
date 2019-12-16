@@ -161,7 +161,7 @@ a:active {
     width: 200px;
     right: 5px;
     bottom: 0px;
-    background-color:  #39b6db;
+    background-color:  #2d7490;
     text-align: center;
     color: #ffffff;
     border-top-right-radius: 5px;
@@ -596,8 +596,11 @@ h1 span {
         background-color: white;
     }
 }
-.sliderTitle{
-    color: #0773e6;
+
+.carousel-caption {
+    top: 50%;
+    bottom: auto;
+
 }
 .sliderDesc{
     color: #0773e6;
@@ -887,8 +890,8 @@ h1 span {
     font-size:0; /* Remember to change it back to normal font size if have captions */
     list-style:none;
     background-color: #1598b7;
-    margin-top:20px;
-    margin-bottom:20px;
+    margin-top:5px;
+    margin-bottom:5px;
 }
 #rig li {
     display: inline-block;
@@ -970,13 +973,22 @@ h1 span {
 #rig li:hover .rig-text {
     opacity:0.9;
 }
-
+.sliderTitle{
+    color: #FFFFFF;
+    font-size: 24pt;
+    background-color: rgba(43, 165, 202, 0.25);
+    padding: 5px;
+    border-radius: 5px;
+} 
 @media (max-width: 9000px) {
     #rig li {
         width:25%;
     }
     .rig-text{
         font-size: 18px;
+    }
+    .sliderTitle{
+        font-size: 18pt;
     }
 }
 /*
@@ -995,5 +1007,8 @@ h1 span {
     }
     .rig-text{
         font-size: 10px;
+    }
+    .sliderTitle{
+        font-size: 14pt;
     }
 }
