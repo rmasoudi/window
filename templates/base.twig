@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/wizard.css">
         <link rel="stylesheet" href="css/styles.css">
-        <link rel="icon" href="/favicon.ico">
+        <link rel="icon" href="./favicon.ico">
         {% block styles %}{% endblock %}
         <title>{% block title %}{% endblock %}</title>
 </head>
@@ -87,17 +87,17 @@
         <div class="push"></div>
  </div>
 <footer class="bottomBar">
-    <div class="row">
-            <div style="margin-right: auto;margin-left: auto;width: 300px;margin-top: 5px;text-align: center;">
-                <strong><a href="{{app_site}}" style="color: #FFFFFF;text-decoration: bold;">{{app_name}}</a></strong>
-                <br/>
-                <a href="{{app_site}}" style="color: #FFFFFF">تولید کننده در و پنجره UPVC</a>
-                <div style="margin-top:5px;">
-                    <a href="mailto:info@{{app_site}}" class="contactPhone">info@{{app_site}}</a>
-                    <a href="tel:+8646230259" class="contactPhone">086-46230259</a>
-                </div>
-            </div>
+    <div style="width:100%; display: flex; flex-wrap: wrap; justify-content: center;margin-top:5px;">
+        <div style="color: #FFFFFF;display: flex;align-items:start;flex-direction:column;justify-content: center;text-align: right;">
+            <div>آدرس دفتر مرکزی: <span>استان مرکزی، شهرستان خمین، میدان پلیس<br/> خیابان قیام، بلوار شهدا</span> </div>
+            <div>تلفن و فکس: <a href="tel:+8646230259" class="contactPhone">46230259-086</a></div>
+            <div> کد پستی : 3881863394</div>
+            <div> رایانامه : <a href="mailto:info@{{app_site}}" class="contactPhone">info@{{app_site}}</a></div>
+        </div>
+        <img style="width:400px;margin-right: 20px;" src="images/loc.png"></div>    
     </div>
+    
+ 
     
 </footer>
 
