@@ -2,10 +2,8 @@
 
 {% block title %}در و پنجره UPVC آذین ویستا{% endblock %}
 {% block styles %}
-    <link rel="stylesheet" href="css/simplelightbox.min.css">
 {% endblock %}
 {% block scripts %}
-<script src="js/simple-lightbox.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function (){
         $('.topBar').css("background-color","#8c8c8c54");
@@ -16,7 +14,6 @@
           else
               $('.topBar').removeClass('topBarMoving');
         });    
-        var $gallery = $('.gallery a').simpleLightbox();
     });
 </script>
 {% endblock %}
@@ -124,10 +121,14 @@
 </div>
 
 <div class="gallery">
-        <a href="images/projects/1.jpg"><img src="images/projects/1.jpg" alt="" title="Beautiful Image" /></a>
-        <a href="images/projects/2.jpg"><img src="images/projects/2.jpg" alt="" title=""/></a>
-        <a href="images/projects/3.jpg"><img src="images/projects/3.jpg" alt="" title="Beautiful Image"/></a>
-        <a href="images/projects/4.jpg"><img src="images/projects/4.jpg" alt="" title=""/></a>
-        <a href="images/projects/5.jpg"><img src="images/projects/5.jpg" alt="" title=""/></a>
+    <div id="preview" class="container"></div>
+    <div style="display: flex;justify-content: space-between;">
+        <img class="thumb" src="images/projects/1.jpg"/>
+        <img class="thumb" src="images/projects/2.jpg"/>
+        <img class="thumb" src="images/projects/3.jpg"/>
+        <img class="thumb" src="images/projects/4.jpg"/>
+        <img class="thumb" src="images/projects/5.jpg"/>
+    </div>
+        
 </div>
 {% endblock %}

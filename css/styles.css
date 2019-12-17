@@ -1038,28 +1038,14 @@ h1 span {
         background-position: 0% 50%;
     }
 }
-
-.gallery a img {
-  border: 2px solid #fff;
-  -webkit-transition: -webkit-transform .15s ease;
-  -moz-transition: -moz-transform .15s ease;
-  -o-transition: -o-transform .15s ease;
-  -ms-transition: -ms-transform .15s ease;
-  transition: transform .15s ease;
-  position: relative;
+.thumb{
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
 }
-.gallery a:hover img {
-  -webkit-transform: scale(1.05);
-  -moz-transform: scale(1.05);
-  -o-transform: scale(1.05);
-  -ms-transform: scale(1.05);
-  transform: scale(1.05);
-  z-index: 5;
-}
-.gallery a.big img {
-  width: 40%;
-}
-
-.align-center {
-  text-align: center;
+.gallery{
+    margin-top:25px;
+    margin-bottom:20px;
+    background-color: #f9f9f9;
+    padding: 5px;
 }
