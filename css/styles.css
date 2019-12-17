@@ -54,7 +54,7 @@
     background-color: #61c7ff;
 }
 .mainContainer{
-    margin-top: 150px;
+    margin-top: 25px;
     min-height: 100%;
     margin-bottom: -100px;
 }
@@ -1011,4 +1011,30 @@ h1 span {
     .sliderTitle{
         font-size: 14pt;
     }
+}
+.adItem{
+    text-align: center;
+    padding: 5px;
+    border-radius: 2px;
+    width: 100%;
+    color: #FFFFFF;
+    height: 80px;
+    line-height: 70px;
+    border: solid 1px #6188d0;
+    background: linear-gradient(-45deg, #99b0ff, #00a8d9, #08c9b6, #08c946);
+    background-size: 400% 400%;
+    animation: gradientBG 5s ease infinite;
+    margin-top: 5px;
+
+}
+@keyframes gradientBG {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
 }

@@ -2,8 +2,11 @@
 
 {% block title %}در و پنجره UPVC آذین ویستا{% endblock %}
 {% block styles %}
+    <link rel="stylesheet" href="css/slick.css">
+    <link rel="stylesheet" href="css/slick-theme.css">
 {% endblock %}
 {% block scripts %}
+<script src="js/slick.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function (){
         $('.topBar').css("background-color","#8c8c8c54");
@@ -14,6 +17,7 @@
           else
               $('.topBar').removeClass('topBarMoving');
         });    
+        
     });
 </script>
 {% endblock %}
@@ -60,6 +64,20 @@
 {% endblock %}
 
 {% block content %}
+<div class="row" style="margin-bottom: 25px;">
+    <div class="col-6 col-sm-3">
+        <div class="adItem">عایق رطوبت</div>
+    </div>
+    <div class="col-6 col-sm-3">
+        <div class="adItem">صرفه اقتصادی</div>
+    </div>
+    <div class="col-6 col-sm-3">
+        <div class="adItem">عایق صدا</div>
+    </div>
+    <div class="col-6 col-sm-3">
+        <div class="adItem">عدم اشتعال</div>
+    </div>
+</div>
 
 <ul id="rig">
     <li>
