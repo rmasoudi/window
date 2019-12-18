@@ -1069,4 +1069,9 @@ h1 span {
 .socialBox img {
     width: 48px;
     margin-top: 5px;
+    cursor: pointer;
+}
+.socialBox img:hover{
+    width: 50px;
+    margin-left: -1px;
 }
