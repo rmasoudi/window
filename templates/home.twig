@@ -4,6 +4,8 @@
 {% block styles %}
 {% endblock %}
 {% block scripts %}
+<script src="js/galleria.min.js"></script>
+<script src="js/galleria.azur.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function (){
         $('.topBar').css("background-color","#8c8c8c54");
@@ -14,6 +16,9 @@
           else
               $('.topBar').removeClass('topBarMoving');
         });    
+        
+        Galleria.loadTheme('galleria.azur.min.js');
+        Galleria.run('.galleria');
     });
 </script>
 {% endblock %}
@@ -74,7 +79,9 @@
         <div class="adItem">عدم اشتعال</div>
     </div>
 </div>
-
+<div class="m-title">
+    انواع پروفیل مورد استفاده 
+</div>
 <ul id="rig">
     <li>
         <a class="rig-cell" href="/23-%D8%A2%DB%8C%D9%86%D9%87-%D9%88-%DA%A9%D9%86%D8%B3%D9%88%D9%84">
@@ -105,7 +112,53 @@
         </a>
     </li>
 </ul>
-<div class="row" style="margin-top: 25px;">
+
+<div class="m-title">
+    نمونه پروژه ها
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class=" galleria">
+            <a href="images/projects/1.jpg">
+                <img src="images/projects/1.jpg"
+                     data-big="images/projects/1.jpg"
+                     data-description=""
+                     data-title="">
+            </a>
+            <a href="images/projects/2.jpg">
+                <img src="images/projects/2.jpg"
+                     data-big="images/projects/2.jpg"
+                     data-description=""
+                     data-title="">
+            </a>
+            <a href="images/projects/3.jpg">
+                <img src="images/projects/3.jpg"
+                     data-big="images/projects/3.jpg"
+                     data-description=""
+                     data-title="">
+            </a>
+            <a href="images/projects/4.jpg">
+                <img src="images/projects/4.jpg"
+                     data-big="images/projects/4.jpg"
+                     data-description=""
+                     data-title="">
+            </a>
+            <a href="images/projects/5.jpg">
+                <img src="images/projects/5.jpg"
+                     data-big="images/projects/5.jpg"
+                     data-description=""
+                     data-title="">
+            </a>
+            <a href="images/projects/6.jpg">
+                <img src="images/projects/6.jpg"
+                     data-big="images/projects/6.jpg"
+                     data-description=""
+                     data-title="">
+            </a>            
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top: 25px;margin-bottom: 50px;">
     <div class="col-6 col-sm-3">
         <div class="adItem">طراحی منعطف</div>
     </div>
@@ -118,17 +171,5 @@
     <div class="col-6 col-sm-3">
         <div class="adItem">عایق اشعه UV</div>
     </div>
-</div>
-
-<div class="gallery">
-    <div id="preview" class="container"></div>
-    <div style="display: flex;justify-content: space-between;">
-        <img class="thumb" src="images/projects/1.jpg"/>
-        <img class="thumb" src="images/projects/2.jpg"/>
-        <img class="thumb" src="images/projects/3.jpg"/>
-        <img class="thumb" src="images/projects/4.jpg"/>
-        <img class="thumb" src="images/projects/5.jpg"/>
-    </div>
-        
 </div>
 {% endblock %}

@@ -1038,14 +1038,22 @@ h1 span {
         background-position: 0% 50%;
     }
 }
-.thumb{
-    width: 100px;
-    height: 100px;
-    cursor: pointer;
+
+.galleria-info-description a { color: #bbb;}
+.cred{margin-top:20px;font-size:11px;}
+.galleria {
+    height:420px;    
+    width: 100%;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    text-align: center;
 }
-.gallery{
-    margin-top:25px;
-    margin-bottom:20px;
-    background-color: #f9f9f9;
-    padding: 5px;
+.m-title{
+    font-size: 1.75em;
+    line-height: 1.4;
+    font-weight: 500;
+    color: #0983a7!important;
+    text-align: center;
+    padding-top: 50px;
+    padding-bottom: 15px;
 }
