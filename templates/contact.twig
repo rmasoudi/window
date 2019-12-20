@@ -1,0 +1,32 @@
+{% extends 'base.twig' %}
+
+{% block title %}تماس با شرکت {{app_name}}{% endblock %}
+{% block desc %}
+    آدرس شرکت {{app_name}}
+{% endblock %}
+{% block keywords %}
+  آدرس شرکت {{app_name}}، شرکت در و پنجره UPVC
+{% endblock %}
+{% block styles %}
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+    $(document).ready(function (){
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+    <br/><br/><br/><br/>
+    <div class="m-title">
+        تماس با {{app_name}}
+    </div>    
+    <div style="width:100%; display: flex; flex-wrap: wrap; justify-content: center;margin-top:5px;">
+        <div style="color: #004085;display: flex;align-items:start;flex-direction:column;justify-content: center;text-align: right;font-size:.8em;">
+            <div>آدرس دفتر مرکزی: <span>استان مرکزی، شهرستان خمین، میدان پلیس<br/> خیابان قیام، بلوار شهدا</span> </div>
+            <div>تلفن و فکس: <a href="tel:+8646230259" class="contactPhone1">46230259-086</a></div>
+            <div> کد پستی : 3881863394</div>
+            <div> رایانامه : <a href="mailto:info@{{app_site}}" class="contactPhone1">info@{{app_site}}</a></div>
+        </div>
+    </div>
+{% endblock %}

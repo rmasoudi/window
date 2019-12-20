@@ -1,0 +1,70 @@
+{% extends 'base.twig' %}
+
+{% block title %}پروژه های در و پنجره UPVC آذین ویستا{% endblock %}
+{% block desc %}
+    تولیدات شرکت پنجره UPVC {{app_name}}
+{% endblock %}
+{% block keywords %}
+  پروژه پنجره UPVC، شرکت در و پنجره UPVC ، خرید اینترنتی پنجره UPVC
+{% endblock %}
+{% block styles %}
+{% endblock %}
+{% block scripts %}
+<script src="js/galleria.min.js"></script>
+<script src="js/galleria.azur.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function (){
+        Galleria.loadTheme('galleria.azur.min.js');
+        Galleria.run('.galleria');        
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+    <br/><br/>
+<div class="m-title">
+    نمونه پروژه ها
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class=" galleria">
+            <a href="images/projects/1.jpg">
+                <img src="images/projects/1.jpg"
+                     data-big="images/projects/1.jpg"
+                     data-description=""
+                     data-title="">
+            </a>
+            <a href="images/projects/2.jpg">
+                <img src="images/projects/2.jpg"
+                     data-big="images/projects/2.jpg"
+                     data-description=""
+                     data-title="">
+            </a>
+            <a href="images/projects/3.jpg">
+                <img src="images/projects/3.jpg"
+                     data-big="images/projects/3.jpg"
+                     data-description=""
+                     data-title="">
+            </a>
+            <a href="images/projects/4.jpg">
+                <img src="images/projects/4.jpg"
+                     data-big="images/projects/4.jpg"
+                     data-description=""
+                     data-title="">
+            </a>
+            <a href="images/projects/5.jpg">
+                <img src="images/projects/5.jpg"
+                     data-big="images/projects/5.jpg"
+                     data-description=""
+                     data-title="">
+            </a>
+            <a href="images/projects/6.jpg">
+                <img src="images/projects/6.jpg"
+                     data-big="images/projects/6.jpg"
+                     data-description=""
+                     data-title="">
+            </a>            
+        </div>
+    </div>
+</div>
+{% endblock %}

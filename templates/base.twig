@@ -3,6 +3,8 @@
 <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="{% block desc %}{% endblock %}"/>    
+        <meta name="keywords" content="{% block keywords %}{% endblock %}"/>    
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/wizard.css">
         <link rel="icon" href="./favicon.ico">
@@ -28,15 +30,15 @@
         </div>
     </a>
     <div id="userPanel">
-        <img data-toggle="modal" data-target="#modalMenu" id="menuToggler" style="height: 32px;"  alt="ترجمه رسمی آنلاین {{app_name}}" src="images/bars.png"/>
+        <img data-toggle="modal" data-target="#modalMenu" id="menuToggler" style="height: 32px;"  alt=" در و پنجره UPVC {{app_name}}" src="images/bars.png"/>
  
     </div>
     <div id="mainMenu">
         <a href="./"> <div class="menuitem">صفحه اصلی</div></a>
-        <a href="./انتخاب_مدارک_ترجمه_رسمی"> <div class="menuitem">محصولات</div></a>
-        <a href=""> <div class="menuitem">نمونه پروژه ها</div></a>
-        <a href=""> <div class="menuitem">تماس با ما</div></a>
-        <a href=""> <div class="menuitem">درباره ما</div></a>
+        <a href="./انواع_پروفیل_UPVC_در_و_پنجره"> <div class="menuitem">محصولات</div></a>
+        <a href="./پروژه_های_در_و_پنجره_UPVC"> <div class="menuitem">نمونه پروژه ها</div></a>
+        <a href="./تماس_با_{{app_url}}"> <div class="menuitem">تماس با ما</div></a>
+        <a href="./درباره_{{app_url}}"> <div class="menuitem">درباره ما</div></a>
     </div>
 </div>
 {% block slider %}

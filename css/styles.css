@@ -167,6 +167,7 @@ a:active {
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
     cursor: pointer;
+    z-index: 10000;
 }
 
 .list-group-item.active {
@@ -290,6 +291,10 @@ fieldset.scheduler-border {
     border-radius: 5px;
     padding: 3px;
     color: #ffffff;
+}
+.contactPhone1{
+    border-radius: 5px;
+    padding: 3px;
 }
 #lblLang{
     color: #1282a3;
