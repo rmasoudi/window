@@ -24,6 +24,11 @@
         });    
         
         Galleria.loadTheme('galleria.azur.min.js');
+        Galleria.configure({
+            transition: 'fade',
+            imageCrop: false,
+            autoplay: 3000
+        });
         Galleria.run('.galleria');
     });
 </script>
