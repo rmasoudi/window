@@ -15,7 +15,13 @@
 <script type="text/javascript">
     $(document).ready(function (){
         Galleria.loadTheme('galleria.azur.min.js');
-        Galleria.run('.galleria');        
+        Galleria.configure({
+            transition: 'fade',
+            imageCrop: false,
+            autoplay: 3000
+        });        
+        Galleria.run('.galleria');     
+        
     });
 </script>
 {% endblock %}
