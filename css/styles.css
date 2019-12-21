@@ -1080,3 +1080,12 @@ h1 span {
     width: 50px;
     margin-left: -1px;
 }
+.productDesc{
+    text-align: justify;
+    direction: rtl;
+}
+.descImage{
+    width: 50%;;
+    margin-right: 25%;
+    margin-left: 25%;
+}

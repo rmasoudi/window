@@ -59,6 +59,22 @@ $app->get('/{name}', function(Request $request, Response $response, $args) use (
         $response->getBody()->write($twig->render('about.twig', ["app_name" => APP_NAME,"app_url" => APP_URL, "app_site" => APP_SITE]));
         return;
     }
+    if ($path == "پروفیل_پنجره_سه_محفظه_ای_UPVC") {
+        $response->getBody()->write($twig->render('profile3.twig', ["app_name" => APP_NAME,"app_url" => APP_URL, "app_site" => APP_SITE]));
+        return;
+    }
+    if ($path == "پروفیل_پنجره_پنج_محفظه_ای_UPVC") {
+        $response->getBody()->write($twig->render('profile5.twig', ["app_name" => APP_NAME,"app_url" => APP_URL, "app_site" => APP_SITE]));
+        return;
+    }    
+    if ($path == "پروفیل_پنجره_کشویی_UPVC") {
+        $response->getBody()->write($twig->render('drawer.twig', ["app_name" => APP_NAME,"app_url" => APP_URL, "app_site" => APP_SITE]));
+        return;
+    }        
+    if ($path == "پنجره_لمینت_UPVC") {
+        $response->getBody()->write($twig->render('laminate.twig', ["app_name" => APP_NAME,"app_url" => APP_URL, "app_site" => APP_SITE]));
+        return;
+    }         
     $response->getBody()->write($twig->render('notfound.twig', ["app_name" => APP_NAME,"app_url" => APP_URL, "app_site" => APP_SITE]));
     return;
 });
